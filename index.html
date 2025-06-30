@@ -162,6 +162,9 @@
             transition: all 2s ease-out;
             opacity: 0;
             transform: translateX(0); 
+            font-weight: bold;
+            font-size: 24px;
+            color: #333;
         }
 
         #my-letter {
@@ -234,9 +237,119 @@
             font-family: 'Dancing Script', cursive;
             font-weight: 400;
         }
+
+        /* Сообщение о повороте телефона */
+        .rotate-message {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            color: white;
+            z-index: 100;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+        }
+
+        .rotate-message i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: rotate 2s infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(90deg); }
+        }
+
+        /* Медиазапросы для мобильных устройств */
+        @media (max-width: 768px) and (orientation: portrait) {
+            .rotate-message {
+                display: flex;
+            }
+            
+            body > *:not(.rotate-message) {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .envelope {
+                width: 250px;
+                height: 166px;
+            }
+            
+            .envelope-top {
+                border-left: 125px solid transparent;
+                border-right: 125px solid transparent;
+                border-top: 83px solid #c62828;
+            }
+            
+            .envelope-bottom {
+                border-left: 125px solid transparent;
+                border-right: 125px solid transparent;
+                border-bottom: 83px solid #ef5350;
+            }
+            
+            .envelope-left {
+                border-top: 83px solid transparent;
+                border-bottom: 83px solid transparent;
+                border-left: 125px solid #d32f2f;
+            }
+            
+            .envelope-right {
+                border-top: 83px solid transparent;
+                border-bottom: 83px solid transparent;
+                border-right: 125px solid #f44336;
+            }
+            
+            .letter {
+                width: 230px;
+                height: 146px;
+            }
+            
+            .letters-container {
+                width: 250px;
+            }
+            
+            .letter-choice {
+                width: 230px;
+                height: 146px;
+                font-size: 20px;
+            }
+            
+            #my-letter {
+                transform: translateX(-150px) !important;
+            }
+            
+            #vika-letter {
+                transform: translateX(150px) !important;
+            }
+            
+            .letter-content {
+                width: 90%;
+                padding: 20px;
+                font-size: 16px;
+            }
+            
+            .letter-content h2 {
+                font-size: 22px;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="rotate-message">
+        <i>🔄</i>
+        <p>Пожалуйста, поверните телефон горизонтально для лучшего просмотра</p>
+    </div>
+    
     <div class="envelope">
         <div class="envelope-main"></div>
         <div class="envelope-top"></div>
@@ -289,8 +402,22 @@
         const vikaLetterContent = document.getElementById('vika-letter-content');
         const closeBtns = document.querySelectorAll('.close-btn');
         const heartContainer = document.querySelector('.heart-container');
+        const rotateMessage = document.querySelector('.rotate-message');
         
         let lettersRead = 0;
+        
+        // Проверка ориентации экрана
+        function checkOrientation() {
+            if (window.innerWidth <= 768 && window.matchMedia("(orientation: portrait)").matches) {
+                rotateMessage.style.display = 'flex';
+            } else {
+                rotateMessage.style.display = 'none';
+            }
+        }
+        
+        // Проверяем ориентацию при загрузке и изменении размера
+        window.addEventListener('load', checkOrientation);
+        window.addEventListener('resize', checkOrientation);
         
         // Открытие конверта
         envelope.addEventListener('click', function() {
@@ -305,8 +432,9 @@
                 });
 
                 setTimeout(() => {
-                     document.getElementById('my-letter').style.transform = 'translateX(-200px)';
-                    document.getElementById('vika-letter').style.transform = 'translateX(200px)';
+                    const isMobile = window.innerWidth <= 768;
+                    document.getElementById('my-letter').style.transform = isMobile ? 'translateX(-150px)' : 'translateX(-200px)';
+                    document.getElementById('vika-letter').style.transform = isMobile ? 'translateX(150px)' : 'translateX(200px)';
                 }, 100);
             }, 800);
         });
