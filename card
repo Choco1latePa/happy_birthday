@@ -1,0 +1,496 @@
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поздравление для Дины</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing Script&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://i.pinimg.com/736x/ea/81/9a/ea819aac5a42bf96817ff6283e7ffa3f.jpg') no-repeat center center;
+            background-size: cover;
+            font-family: 'Times New Roman', Times, serif;
+            overflow: hidden;
+            transition: background-color 0.5s;
+            position: relative;
+        }
+
+        .envelope {
+            width: 300px;
+            height: 200px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+            z-index: 5;
+        }
+        
+        /* Основной конверт (центр) */
+        .envelope-main {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #e53935;
+            border-radius: 5px;
+            z-index: 1;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Верхняя створка */
+        .envelope-top {
+            position: absolute;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 100px solid #c62828;
+            transform-origin: top;
+            transform: rotateX(0deg);
+            z-index: 6;
+            transition: all 0.5s ease-in-out 0.2s;
+        }
+        
+        /* Нижняя створка */
+        .envelope-bottom {
+            position: absolute;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-bottom: 100px solid #ef5350;
+            transform-origin: bottom;
+            transform: rotateX(0deg);
+            z-index: 4;
+            transition: all 0.5s ease-in-out 0.2s;
+        }
+        
+        /* Левая створка */
+        .envelope-left {
+            position: absolute;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-top: 100px solid transparent;
+            border-bottom: 100px solid transparent;
+            border-left: 150px solid #d32f2f;
+            transform-origin: left;
+            transform: rotateY(0deg);
+            z-index: 3;
+            transition: all 0.5s ease-in-out 0.2s;
+        }
+        
+        /* Правая створка */
+        .envelope-right {
+            position: absolute;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-top: 100px solid transparent;
+            border-bottom: 100px solid transparent;
+            border-right: 150px solid #f44336;
+            transform-origin: right;
+            transform: rotateY(0deg);
+            z-index: 3;
+            transition: all 0.5s ease-in-out 0.2s;
+        }
+        
+        .envelope:hover {
+            transform: scale(1.05);
+        }
+        
+        .envelope.open .envelope-top {
+            transform: rotateX(180deg);
+        }
+        
+        .envelope.open .envelope-bottom {
+            transform: rotateX(180deg);
+        }
+        
+        .envelope.open .envelope-left {
+            transform: rotateY(180deg);
+        }
+        
+        .envelope.open .envelope-right {
+            transform: rotateY(180deg);
+        }
+
+        
+        .letter {
+            position: absolute;
+            width: 280px; 
+            height: 180px; 
+            background: url('https://i.pinimg.com/736x/72/34/77/723477c22d6162fd70718f1d5a379aa3.jpg') no-repeat center center;
+            background-size: cover;
+            top: 10px;
+            left: 10px;
+            border-radius: 2px;
+            z-index: 2;
+            transition: all 0.3s ease-in-out;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .letters-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            width: 300px;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .letter-choice {
+            position: absolute;
+            width: 280px;
+            height: 180px;
+            background: url('https://i.pinimg.com/736x/72/34/77/723477c22d6162fd70718f1d5a379aa3.jpg') no-repeat center center;
+            background-size: cover;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 2s ease-out;
+            opacity: 0;
+            transform: translateX(0); 
+        }
+
+        #my-letter {
+            left: 0;
+        }
+
+        #vika-letter {
+            right: 0;
+        }
+        
+        .letter-choice:hover {
+            transform: scale(1.05);
+        }
+        
+        .letter-content {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 500px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            text-align: center;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #888;
+        }
+        
+        .heart-container {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+        }
+        
+        #heart {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .from {
+            margin-top: 20px;
+            font-style: italic;
+            color: #666;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap');
+
+        .letter-content {
+            font-family: 'Dancing Script', cursive;
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+    <div class="envelope">
+        <div class="envelope-main"></div>
+        <div class="envelope-top"></div>
+        <div class="envelope-bottom"></div>
+        <div class="envelope-left"></div>
+        <div class="envelope-right"></div>
+        <div class="letter"></div>
+    </div>
+    
+    <div class="letters-container">
+        <div class="letter-choice" id="my-letter">
+            САША
+        </div>
+        <div class="letter-choice" id="vika-letter">
+            ВИКА
+        </div>
+    </div>
+    
+    <div class="letter-content" id="my-letter-content">
+        <span class="close-btn">&times;</span>
+        <h2>Дина, с днем рождения тебя!</h2>
+        <p>Ты замечательный человек, и я очень ценю нашу дружбу. Пусть в твоей жизни будет много светлых моментов, приятных сюрпризов и теплых встреч.</p>
+        <p>А, ну и по классике, чтобы у тебя никогда не было проблем с денюжками, чтобы они всегда были)))  А еще нашла дело(работу), которая тебе действительно нравиться.</p>
+        <p style="text-align: center;"><img src="https://i.pinimg.com/736x/d9/4b/75/d94b75363632915f0bb8d40b44b3c5db.jpg" alt="Сердце" style="width: 100px; height: auto;"></p>
+        <div class="from">Для тебя)</div>
+    </div>
+    
+    <div class="letter-content" id="vika-letter-content">
+        <span class="close-btn">&times;</span>
+        <h2>Динаа, ничего себе ты старая)</h2>
+        <p>Долго думала что пожелать, потому что красота у тебя есть, любимый человек есть, подруги (мы с Сашей есть). </p>
+        <p>Счастья тебе, тепла, радости, оставайся такой же красивой и весёлой) 
+        Пусть все невзгоды обходят тебя стороной, а рядом будут только любимые люди💞</p>
+        <p>Главное больше улыбайся, радуйся, сходи с ума, живи!
+ты очень близкий мне человек, ты внесла огромную роль в мою личность, и я безумно этому рада.</p>
+        <p style="text-align: center;"><img src="https://i.pinimg.com/736x/b8/08/10/b80810f227fda8256d43d8f0b8fd4ae3.jpg" alt="Сердце" style="width: 100px; height: auto;"></p>
+        <div class="from">Ещё раз с днём рождения 💋</div>
+    </div>
+    
+    <div class="heart-container">
+        <canvas id="heart"></canvas>
+    </div>
+    
+    <script>
+        const envelope = document.querySelector('.envelope');
+        const lettersContainer = document.querySelector('.letters-container');
+        const myLetter = document.getElementById('my-letter');
+        const vikaLetter = document.getElementById('vika-letter');
+        const myLetterContent = document.getElementById('my-letter-content');
+        const vikaLetterContent = document.getElementById('vika-letter-content');
+        const closeBtns = document.querySelectorAll('.close-btn');
+        const heartContainer = document.querySelector('.heart-container');
+        
+        let lettersRead = 0;
+        
+        // Открытие конверта
+        envelope.addEventListener('click', function() {
+            this.classList.add('open');
+            
+            setTimeout(() => {
+                this.style.display = 'none';
+                lettersContainer.style.display = 'flex';
+
+                document.querySelectorAll('.letter-choice').forEach(letter => {
+                    letter.style.opacity = '1';
+                });
+
+                setTimeout(() => {
+                     document.getElementById('my-letter').style.transform = 'translateX(-200px)';
+                    document.getElementById('vika-letter').style.transform = 'translateX(200px)';
+                }, 100);
+            }, 800);
+        });
+        
+        // Открытие письма от Саши
+        myLetter.addEventListener('click', function() {
+            myLetterContent.style.display = 'block';
+        });
+        
+        // Открытие письма от Вики
+        vikaLetter.addEventListener('click', function() {
+            vikaLetterContent.style.display = 'block';
+        });
+        
+        // Закрытие писем
+        closeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.parentElement.style.display = 'none';
+                lettersRead++;
+                
+                if (lettersRead === 2) {
+                    showHeart();
+                }
+            });
+        });
+        
+        // Показ сердца
+        function showHeart() {
+            lettersContainer.style.display = 'none';
+            heartContainer.style.display = 'block';
+            initHeartAnimation();
+        }
+        
+        // Анимация сердца из второго кода
+        function initHeartAnimation() {
+            window.requestAnimationFrame =
+                window.__requestAnimationFrame ||
+                window.requestAnimationFrame ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimationFrame ||
+                (function () {
+                    return function (callback, element) {
+                        var lastTime = element.__lastTime;
+                        if (lastTime === undefined) {
+                            lastTime = 0;
+                        }
+                        var currTime = Date.now();
+                        var timeToCall = Math.max(1, 33 - (currTime - lastTime));
+                        window.setTimeout(callback, timeToCall);
+                        element.__lastTime = currTime + timeToCall;
+                    };
+                })();
+            
+            var loaded = false;
+            var init = function () {
+                if (loaded) return;
+                loaded = true;
+                var mobile = (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(((navigator.userAgent || navigator.vendor || window.opera)).toLowerCase()));
+                var koef = mobile ? 1 : 1;
+                var canvas = document.getElementById('heart');
+                var ctx = canvas.getContext('2d');
+                var width = canvas.width = koef * innerWidth;
+                var height = canvas.height = koef * innerHeight;
+                var rand = Math.random;
+
+                var heartPosition = function (rad) {
+                    return [Math.pow(Math.sin(rad), 3), -(15 * Math.cos(rad) - 5 * Math.cos(2 * rad) - 2 * Math.cos(3 * rad) - Math.cos(4 * rad))];
+                };
+                
+                var scaleAndTranslate = function (pos, sx, sy, dx, dy) {
+                    return [dx + pos[0] * sx, dy + pos[1] * sy];
+                };
+
+                window.addEventListener('resize', function () {
+                    width = canvas.width = koef * innerWidth;
+                    height = canvas.height = koef * innerHeight;
+                });
+
+                var traceCount = mobile ? 20 : 60;
+                var size1 = mobile ? 100 : 210;
+                var size2 = mobile ? 6 : 13;
+                var size11 = mobile ? 80 : 150;
+                var size12 = mobile ? 3 : 9;
+                var pointsOrigin = [];
+                var i;
+                var dr = mobile ? 0.3 : 0.1;
+                
+                for (i = 0; i < Math.PI * 2; i += dr) pointsOrigin.push(scaleAndTranslate(heartPosition(i), size1, size2, 0, 0));
+                for (i = 0; i < Math.PI * 2; i += dr) pointsOrigin.push(scaleAndTranslate(heartPosition(i), size11, size12, 0, 0));
+                for (i = 0; i < Math.PI * 2; i += dr) pointsOrigin.push(scaleAndTranslate(heartPosition(i), 90, 5, 0, 0));
+                var heartPointsCount = pointsOrigin.length;
+
+                var targetPoints = [];
+                var pulse = function (kx, ky) {
+                    for (i = 0; i < pointsOrigin.length; i++) {
+                        targetPoints[i] = [];
+                        targetPoints[i][0] = kx * pointsOrigin[i][0] + width / 2;
+                        targetPoints[i][1] = ky * pointsOrigin[i][1] + height / 2;
+                    }
+                };
+
+                var e = [];
+                for (i = 0; i < heartPointsCount; i++) {
+                    var x = rand() * width;
+                    var y = rand() * height;
+                    e[i] = {
+                        vx: 0,
+                        vy: 0,
+                        R: 2,
+                        speed: rand() + 5,
+                        q: ~~(rand() * heartPointsCount),
+                        D: 2 * (i % 2) - 1,
+                        force: 0.2 * rand() + 0.7,
+                        f: "hsla(0," + ~~(40 * rand() + 60) + "%," + ~~(60 * rand() + 20) + "%,.3)",
+                        trace: []
+                    };
+                    for (var k = 0; k < traceCount; k++) e[i].trace[k] = {x: x, y: y};
+                }
+
+                var config = {
+                    traceK: 0.4,
+                    timeDelta: 0.01
+                };
+
+                var time = 0;
+                var loop = function () {
+                    var n = -Math.cos(time);
+                    pulse((1 + n) * .5, (1 + n) * .5);
+                    time += ((Math.sin(time)) < 0 ? 9 : (n > 0.8) ? .2 : 1) * config.timeDelta;
+                    
+                    // Прозрачный фон вместо черного
+                    ctx.fillStyle = "rgba(0,0,0,2)";
+                    ctx.fillRect(0, 0, width, height);
+                    
+                    for (i = e.length; i--;) {
+                        var u = e[i];
+                        var q = targetPoints[u.q];
+                        var dx = u.trace[0].x - q[0];
+                        var dy = u.trace[0].y - q[1];
+                        var length = Math.sqrt(dx * dx + dy * dy);
+                        if (10 > length) {
+                            if (0.95 < rand()) {
+                                u.q = ~~(rand() * heartPointsCount);
+                            }
+                            else {
+                                if (0.99 < rand()) {
+                                    u.D *= -1;
+                                }
+                                u.q += u.D;
+                                u.q %= heartPointsCount;
+                                if (0 > u.q) {
+                                    u.q += heartPointsCount;
+                                }
+                            }
+                        }
+                        u.vx += -dx / length * u.speed;
+                        u.vy += -dy / length * u.speed;
+                        u.trace[0].x += u.vx;
+                        u.trace[0].y += u.vy;
+                        u.vx *= u.force;
+                        u.vy *= u.force;
+                        for (k = 0; k < u.trace.length - 1;) {
+                            var T = u.trace[k];
+                            var N = u.trace[++k];
+                            N.x -= config.traceK * (N.x - T.x);
+                            N.y -= config.traceK * (N.y - T.y);
+                        }
+                        ctx.fillStyle = u.f;
+                        for (k = 0; k < u.trace.length; k++) {
+                            ctx.fillRect(u.trace[k].x, u.trace[k].y, 1, 1);
+                        }
+                    }
+
+                    window.requestAnimationFrame(loop, canvas);
+                };
+                loop();
+            };
+
+            var s = document.readyState;
+            if (s === 'complete' || s === 'loaded' || s === 'interactive') init();
+            else document.addEventListener('DOMContentLoaded', init, false);
+        }
+    </script>
+</body>
+</html>
